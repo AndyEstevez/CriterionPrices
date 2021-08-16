@@ -1,4 +1,5 @@
 const typeorm = require('typeorm')
+const mysql = require('mysql')
 // database name: allTitles
 class Title {
     constructor(id, spineNumber, image, title, director, country, year, price, link) {
@@ -59,8 +60,8 @@ async function getConnection() {
         host: "localhost",
         port: 3306, 
         username: "root",
-        password: "password",
-        database: "allTitles",
+        password: "password123",
+        database: "alltitles",
         synchronize: true,
         logging: false,
         entities: [
@@ -69,3 +70,43 @@ async function getConnection() {
     })
 }
 
+// return all titles 
+async function getAllTitles(connection) {
+
+    const titleRepo = connection.getRepository(Title)
+    const titles = await titleRepo.find();
+    connection.close();
+    return titles;
+}
+
+async function insertTitles(data, connection) {
+    console.log("INSERT DATABASE FUNCTION")
+    
+
+    for(let d of data){
+        // create
+        const title = new Title()
+        title.spineNumber = d.spineNumber
+        title.image = d.img
+        title.title = d.title
+        title.director = d.director
+        title.country = d.country
+        title.year = d.year
+        title.price = d.price
+        title.link = d.link
+        console.log(title)
+        // save
+        const titleRepo = connection.getRepository(Title);
+        const res = await titleRepo.save(title);        
+    }
+
+    // return all items in table
+    const titleRepo = connection.getRepository(Title);
+    const allTitles = await titleRepo.find();
+    connection.close();
+    return allTitles;
+}
+
+module.exports = {
+    getAllTitles, insertTitles, getConnection
+}

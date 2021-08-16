@@ -3,7 +3,7 @@ const puppeteer = require('puppeteer');
 async function scrapeAllTitles(url) {
 
     // start browser and create 2 pages
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({headless: false});
     const page = await browser.newPage();
     await page.goto(url);
     const page2 = await browser.newPage();
@@ -35,7 +35,6 @@ async function scrapeAllTitles(url) {
     // because don't have price on all collection page on criterion.com
     for(let t of title_details){
         let link = t.link
-        page2.waitForTimeout(200);
 
         await page2.goto(link)
         const price = await page2.$eval('body > div.page-contain > main > article.product__details > div.content-container.product-primary-content-container > div > div.right > div > div > section.purchase-options.pk-c-purchase-options > form > fieldset.purchase-buttons > div:nth-child(1) > label > span.meta-prices > span.item-price', 
@@ -44,7 +43,7 @@ async function scrapeAllTitles(url) {
     }
     await page2.close();
 
-    console.log(title_details)
+    // console.log(title_details)
 
     return title_details;
     
