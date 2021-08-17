@@ -76,8 +76,10 @@ async function getConnection() {
 
 // return all titles 
 async function getAllTitles(connection) {
-    const titleRepo = connection.getRepository(Title)
-    const titles = await titleRepo.find();
+    const titleRepo = await connection.getRepository(Title)
+    // sorts the table by length of spine number: therefore empty spine # goes first, then spine #'s go next
+    const titles = await titleRepo.createQueryBuilder('title').orderBy('LENGTH(title.spineNumber)', 'ASC').getMany();
+    
     connection.close();
     return titles;
 }
@@ -104,7 +106,11 @@ async function updateTitles(data, connection) {
             await titleRepo.save(title);      
         }
     }
-    const titles = await titleRepo.find();
+
+    // sorts the table by length of spine number: 
+    // therefore empty spine # goes first, then spine #'s go next
+    // needed for inserting new titles that do & don't have spine # 
+    const titles = await titleRepo.createQueryBuilder('title').orderBy('LENGTH(title.spineNumber)', 'ASC').getMany();
     connection.close();
     return titles;
 }
