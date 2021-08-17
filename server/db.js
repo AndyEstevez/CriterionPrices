@@ -27,7 +27,7 @@ const TitleSchema = new EntitySchema({
             generated: true
         },
         spineNumber: {
-            type: "int",
+            type: "text",
             nullable: true
         },
         image: {
@@ -35,7 +35,6 @@ const TitleSchema = new EntitySchema({
         },
         title: {
             type: "text",
-            nullable: true
         },
         director: {
             type: "text",
@@ -77,17 +76,44 @@ async function getConnection() {
 
 // return all titles 
 async function getAllTitles(connection) {
-
     const titleRepo = connection.getRepository(Title)
     const titles = await titleRepo.find();
     connection.close();
     return titles;
 }
 
+// update in case of missing titles in database
+async function updateTitles(data, connection) {
+    const titleRepo = connection.getRepository(Title);
+    let tempObject;
+    for(let i = 0; i < data.length; i++){
+        tempObject = await titleRepo.find({where: {title: data[i].title}})
+        if(tempObject.length == 0){
+            const title = new Title()
+            title.spineNumber = data[i].spineNumber
+            title.image = data[i].img
+            title.title = data[i].title
+            title.director = data[i].director
+            title.country = data[i].country
+            title.year = data[i].year
+            title.price = data[i].price
+            title.link = data[i].link
+            console.log(title)
+            
+            // save
+            await titleRepo.save(title);      
+        }
+    }
+    const titles = await titleRepo.find();
+    connection.close();
+    return titles;
+}
+
+
+// insert titles 
 async function insertTitles(data, connection) {
     console.log("INSERT DATABASE FUNCTION")
     
-
     for(let d of data){
         // create
         const title = new Title()
@@ -113,5 +139,5 @@ async function insertTitles(data, connection) {
 }
 
 module.exports = {
-    getAllTitles, insertTitles, getConnection
+    getAllTitles, insertTitles, updateTitles, getConnection
 }

@@ -1,13 +1,11 @@
 const puppeteer = require('puppeteer');
 
 async function scrapeAllTitles(url) {
-
     // start browser and create 2 pages
     const browser = await puppeteer.launch({headless: false});
     const page = await browser.newPage();
     await page.goto(url);
     const page2 = await browser.newPage();
-    // const page3 = await browser.newPage();
 
     const title_details = await page.evaluate(() => {
         // get the table
@@ -35,48 +33,71 @@ async function scrapeAllTitles(url) {
     // iterate through each link from the array 
     // because don't have price on all collection page on criterion.com
     let price2 = 0;
-    let price3 = 0;
     for(let i = 0; i < title_details.length; i++){
         let link2 = title_details[i].link
         await page2.goto(link2)
         price2 = await page2.$eval('body > div.page-contain > main > article.product__details > div.content-container.product-primary-content-container > div > div.right > div > div > section.purchase-options.pk-c-purchase-options > form > fieldset.purchase-buttons > div:nth-child(1) > label > span.meta-prices > span.item-price', 
                                         el => el.innerText)
         title_details[i]['price'] = price2
-
-        // let end = Math.floor(title_details.length/2)+i
-        // console.log(end)
-        // let link3 = title_details[end].link
-        // console.log(title_details[end].link)
-
-        // await page3.goto(link3)
-        // price3 = await page3.$eval('body > div.page-contain > main > article.product__details > div.content-container.product-primary-content-container > div > div.right > div > div > section.purchase-options.pk-c-purchase-options > form > fieldset.purchase-buttons > div:nth-child(1) > label > span.meta-prices > span.item-price', 
-        //                                 el => el.innerText)
-        // title_details[end]['price'] = price3
-
     }
 
-
-    // for(let t of title_details){
-    //     let link = t.link
-
-    //     await page2.goto(link)
-    //     const price = await page2.$eval('body > div.page-contain > main > article.product__details > div.content-container.product-primary-content-container > div > div.right > div > div > section.purchase-options.pk-c-purchase-options > form > fieldset.purchase-buttons > div:nth-child(1) > label > span.meta-prices > span.item-price', 
-    //                                     el => el.innerText)
-    //     t['price'] = price
-    // }
     await page2.close();
-    // await page3.close();
     await page.close();
 
     // console.log(title_details)
 
     return title_details;
-    
+}
+
+async function checkLastEntries(url) {
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.goto(url);
+    const page2 = await browser.newPage();
+
+    const title_details = await page.evaluate(() => {
+        // get the table
+        let table = document.querySelector('#gridview > tbody')
+        let panels = Array.from(table.children);
+
+        // iterates through each table row for Criterion title
+        // gets all basic info for each title
+        let title_info = panels.map(panel => {
+            let spineNumber = panel.querySelector('.g-spine').innerText;
+            let img = panel.querySelector('.g-img').querySelector('img').src;
+            let title = panel.querySelector('.g-title').innerText;
+            let director = panel.querySelector('.g-director').innerText;
+            let country = panel.querySelector('.g-country').innerText;
+            let year = panel.querySelector('.g-year').innerText;
+            let link = panel.getAttribute('data-href');
+
+            return { spineNumber, img, title, director, country, year, link };
+        })
+        return title_info;
+    })
+
+    let last_section = title_details.length-20;
+    let titles = title_details.slice(last_section, title_details.length)
+
+    for(let t of titles){
+        let link = t.link
+        page2.waitForTimeout(200);
+
+        await page2.goto(link)
+        const price = await page2.$eval('body > div.page-contain > main > article.product__details > div.content-container.product-primary-content-container > div > div.right > div > div > section.purchase-options.pk-c-purchase-options > form > fieldset.purchase-buttons > div:nth-child(1) > label > span.meta-prices > span.item-price', 
+                                        el => el.innerText)
+        t['price'] = price
+    }
+    await page2.close();
+
+    // console.log(titles)
+
+    return titles
 }
 
 // using temp url for testing
 // scrapePage('https://www.criterion.com/shop/browse/list?format=blu-ray&decade=2000s&country=United%20States')
 
 module.exports = {
-    scrapeAllTitles
+    scrapeAllTitles, checkLastEntries
 }

@@ -18,6 +18,12 @@ export default class HomePage extends Component {
         //         })
         //     })
         await axios.get('/allTitles')
+            .then(response => { 
+                this.setState({
+                    data: response.data
+                })
+            })
+        await axios.post('/updateTitles')
             .then(response => { console.log(response)
                 this.setState({
                     data: response.data
@@ -45,7 +51,7 @@ export default class HomePage extends Component {
                     <tbody>
                         {this.state.data.map(index => {
                             return(
-                                <tr key={index.title} style={{fontFamily: "Gotham B"}} class="has-text-centered" onClick={() => window.open(index.link, "_blank")}>
+                                <tr key={index.link} style={{fontFamily: "Gotham B"}} class="has-text-centered" onClick={() => window.open(index.link, "_blank")}>
                                     <td>{index.spineNumber}</td>
                                     <td>
                                         <img style={{width: "40%", height: "auto"}} src={index.image} alt={index.title}/>
