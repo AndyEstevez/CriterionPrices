@@ -11,3 +11,21 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+tr {
+  border-top: 3px solid black;
+  
+}
+
+.content-table tbody tr:hover {
+  transform: scale(1.05);
+  background: #FFFFFF;
+  z-index: 0;
+  box-shadow: 2px 2px 2px 2px #000;
+  cursor: pointer;
+}
+
+.content-table {
+  border-collapse: separate;
+  border-spacing: 0 1em;
+}

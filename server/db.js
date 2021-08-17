@@ -28,21 +28,26 @@ const TitleSchema = new EntitySchema({
         },
         spineNumber: {
             type: "int",
+            nullable: true
         },
         image: {
             type: "text"
         },
         title: {
-            type: "text"
+            type: "text",
+            nullable: true
         },
         director: {
-            type: "text"
+            type: "text",
+            nullable: true
         },
         country: {
-            type: "text"
+            type: "text",
+            nullable: true
         },
         year: {
-            type: "text"
+            type: "text",
+            nullable: true
         },
         price: {
             type: "text"

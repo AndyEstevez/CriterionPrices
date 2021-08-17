@@ -11,27 +11,27 @@ export default class HomePage extends Component {
 
 
     async componentDidMount() {
-        await axios.post('/allTitles')
-            .then(response => { console.log(response)
-                this.setState({
-                    data: response.data
-                })
-            })
-        // await axios.get('/allTitles')
+        // await axios.post('/allTitles')
         //     .then(response => { console.log(response)
         //         this.setState({
         //             data: response.data
         //         })
         //     })
+        await axios.get('/allTitles')
+            .then(response => { console.log(response)
+                this.setState({
+                    data: response.data
+                })
+            })
     }
 
     render() {
         console.log(this.state.data)
         return (
             <div class="container">
-                <table class="table is-hoverable has-text-centered ">
-                    <thead>
-                        <tr style={{fontFamily: "Mercury Display A", fontSize: "16px"}}>
+                <table class="table is-hoverable has-text-centered" className="content-table">
+                    <thead style={{lineHeight: "100px", borderBottom: "3px solid black"}}>
+                        <tr style={{fontFamily: "Mercury Display A", fontSize: "16px", whiteSpace: "nowrap"}} class="has-text-centered">
                             <td>Spine #</td>
                             <td></td>
                             <td>Title</td>
@@ -45,10 +45,10 @@ export default class HomePage extends Component {
                     <tbody>
                         {this.state.data.map(index => {
                             return(
-                                <tr key={index.spineNumber} style={{fontFamily: "Gotham B"}} class="has-text-centered">
+                                <tr key={index.title} style={{fontFamily: "Gotham B"}} class="has-text-centered" onClick={() => window.open(index.link, "_blank")}>
                                     <td>{index.spineNumber}</td>
                                     <td>
-                                        <img src={index.image} alt={index.title}/>
+                                        <img style={{width: "40%", height: "auto"}} src={index.image} alt={index.title}/>
                                     </td>
                                     <td style={{fontWeight: "700",}}>{index.title}</td>
                                     <td>{index.director}</td>

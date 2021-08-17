@@ -7,6 +7,7 @@ async function scrapeAllTitles(url) {
     const page = await browser.newPage();
     await page.goto(url);
     const page2 = await browser.newPage();
+    // const page3 = await browser.newPage();
 
     const title_details = await page.evaluate(() => {
         // get the table
@@ -33,15 +34,39 @@ async function scrapeAllTitles(url) {
 
     // iterate through each link from the array 
     // because don't have price on all collection page on criterion.com
-    for(let t of title_details){
-        let link = t.link
-
-        await page2.goto(link)
-        const price = await page2.$eval('body > div.page-contain > main > article.product__details > div.content-container.product-primary-content-container > div > div.right > div > div > section.purchase-options.pk-c-purchase-options > form > fieldset.purchase-buttons > div:nth-child(1) > label > span.meta-prices > span.item-price', 
+    let price2 = 0;
+    let price3 = 0;
+    for(let i = 0; i < title_details.length; i++){
+        let link2 = title_details[i].link
+        await page2.goto(link2)
+        price2 = await page2.$eval('body > div.page-contain > main > article.product__details > div.content-container.product-primary-content-container > div > div.right > div > div > section.purchase-options.pk-c-purchase-options > form > fieldset.purchase-buttons > div:nth-child(1) > label > span.meta-prices > span.item-price', 
                                         el => el.innerText)
-        t['price'] = price
+        title_details[i]['price'] = price2
+
+        // let end = Math.floor(title_details.length/2)+i
+        // console.log(end)
+        // let link3 = title_details[end].link
+        // console.log(title_details[end].link)
+
+        // await page3.goto(link3)
+        // price3 = await page3.$eval('body > div.page-contain > main > article.product__details > div.content-container.product-primary-content-container > div > div.right > div > div > section.purchase-options.pk-c-purchase-options > form > fieldset.purchase-buttons > div:nth-child(1) > label > span.meta-prices > span.item-price', 
+        //                                 el => el.innerText)
+        // title_details[end]['price'] = price3
+
     }
+
+
+    // for(let t of title_details){
+    //     let link = t.link
+
+    //     await page2.goto(link)
+    //     const price = await page2.$eval('body > div.page-contain > main > article.product__details > div.content-container.product-primary-content-container > div > div.right > div > div > section.purchase-options.pk-c-purchase-options > form > fieldset.purchase-buttons > div:nth-child(1) > label > span.meta-prices > span.item-price', 
+    //                                     el => el.innerText)
+    //     t['price'] = price
+    // }
     await page2.close();
+    // await page3.close();
+    await page.close();
 
     // console.log(title_details)
 
