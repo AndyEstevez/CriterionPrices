@@ -6,6 +6,15 @@ const port = process.env.PORT || 5000;
 const scraper = require('./webscraper')
 const db = require('./db');
 
+// get Criterion preorder titles from database
+app.post('/preorderTitles', async(req, res) => {
+    const connection = await db.getConnection();
+    const url = 'https://www.criterion.com/shop/browse?popular=coming-soon';
+    const scrapeData = await scraper.scrapePreorderOrNewReleases(url);
+    const preorderTitles = await db.insertPreorders(scrapeData, connection);
+    res.send(preorderTitles)
+})
+
 
 // get all the Criterion titles from database
 app.get('/allTitles', async(req, res) => {

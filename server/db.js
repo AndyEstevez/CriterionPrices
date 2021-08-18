@@ -1,6 +1,9 @@
 const typeorm = require('typeorm')
 const mysql = require('mysql')
 // database name: allTitles
+
+const EntitySchema = require('typeorm').EntitySchema;
+
 class Title {
     constructor(id, spineNumber, image, title, director, country, year, price, link) {
         this.id = id
@@ -14,8 +17,6 @@ class Title {
         this.link = link
     }
 }
-
-const EntitySchema = require('typeorm').EntitySchema;
 
 const TitleSchema = new EntitySchema({
     name: "Title",
@@ -57,6 +58,44 @@ const TitleSchema = new EntitySchema({
     }
 })
 
+class NewTitle {
+    constructor(id, image, title, director, price, link) {
+        this.id = id;
+        this.image = image;
+        this.title = title;
+        this.director = director;
+        this.price = price;
+        this.link = link;
+    }
+}
+
+const PreorderSchema = new EntitySchema({
+    name: 'Preorder',
+    target: NewTitle,
+    columns: {
+        id: {
+            primary: true,
+            type: 'int',
+            generated: true
+        },
+        image: {
+            type: 'text'
+        },
+        title: {
+            type: 'text'
+        },
+        director: {
+            type: 'text'
+        },
+        price: {
+            type: 'text'
+        },
+        link: {
+            type: 'text'
+        }
+    }
+})
+
 
 async function getConnection() {
     return await typeorm.createConnection({
@@ -69,11 +108,36 @@ async function getConnection() {
         synchronize: true,
         logging: false,
         entities: [
-            TitleSchema
+            TitleSchema, PreorderSchema
         ]
     })
 }
+/* Functions for Preorder table */
+// delete all entries and insert to table
+async function insertPreorders(data, connection){
+    const preorderRepo = await connection.getRepository(NewTitle)
+    await preorderRepo.clear();
 
+    for(let d of data){
+        // create
+        const title = new NewTitle()
+        title.image = d.img
+        title.title = d.title
+        title.director = d.director
+        title.price = d.price
+        title.link = d.link
+                
+        // save
+        await preorderRepo.save(title);        
+    }
+
+    // return all items in table
+    const allTitles = await preorderRepo.find();
+    connection.close();
+    return allTitles;
+}
+
+/* Functions for Title table */
 // return all titles 
 async function getAllTitles(connection) {
     const titleRepo = await connection.getRepository(Title)
@@ -115,7 +179,6 @@ async function updateTitles(data, connection) {
     return titles;
 }
 
-
 // insert titles 
 async function insertTitles(data, connection) {
     console.log("INSERT DATABASE FUNCTION")
@@ -145,5 +208,5 @@ async function insertTitles(data, connection) {
 }
 
 module.exports = {
-    getAllTitles, insertTitles, updateTitles, getConnection
+    getAllTitles, insertTitles, updateTitles, insertPreorders, getConnection
 }

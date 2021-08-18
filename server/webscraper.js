@@ -126,6 +126,7 @@ async function scrapePreorderOrNewReleases(url){
 
         await page2.close();        
         await page.close();
+        return films
     } catch (err) {
         console.log("Error: ", err);
     }
