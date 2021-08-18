@@ -49,6 +49,8 @@ async function scrapeAllTitles(url) {
     return title_details;
 }
 
+// only for all titles section
+// get last 20 titles to compare to database to add new entries to the collection
 async function checkLastEntries(url) {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
@@ -89,15 +91,50 @@ async function checkLastEntries(url) {
         t['price'] = price
     }
     await page2.close();
-
+    await page.close();
     // console.log(titles)
 
     return titles
 }
 
+async function scrapePreorderOrNewReleases(url){
+    try {
+        const browser = await puppeteer.launch({headless: true});
+        const page = await browser.newPage();
+        const page2 = await browser.newPage();
+        await page.goto(url);
+        
+        const filmWraps = await page.$$('.filmWrap')
+        const films = [];
+        for(const ele of filmWraps) {
+            const date = await ele.$eval('dt', dt => dt.innerText)
+            const title = await ele.$eval('figure > img', figure => figure.getAttribute('alt'))
+            const director = await ele.$eval('dd', dd => dd.innerText)
+            const img = await ele.$eval('img', img => img.getAttribute('src'))
+            const link = await ele.$eval('a', a => a.getAttribute('href'))
+            
+            films.push({date, title, director, img, link});
+        }
+
+        for(let film of films) {
+            let link = film.link
+            await page2.goto(link)
+            const price = await page2.$eval('body > div.page-contain > main > article > div.content-container.product-primary-content-container > div > div.right > div > div > section.purchase-options.pk-c-purchase-options > form > fieldset.purchase-buttons > div:nth-child(1) > label > span.meta-prices > span.item-price', 
+                                            el => el.innerText)
+            film['price'] = price
+        }
+
+        await page2.close();        
+        await page.close();
+    } catch (err) {
+        console.log("Error: ", err);
+    }
+}
+
+
 // using temp url for testing
 // scrapePage('https://www.criterion.com/shop/browse/list?format=blu-ray&decade=2000s&country=United%20States')
 
 module.exports = {
-    scrapeAllTitles, checkLastEntries
+    scrapeAllTitles, checkLastEntries, scrapePreorderOrNewReleases
 }
