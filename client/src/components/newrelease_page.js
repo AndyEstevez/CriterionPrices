@@ -1,8 +1,8 @@
-import axios from 'axios';
 import React, { Component } from 'react'
+import axios from 'axios'
 import Table from './Table'
 
-export default class PreorderPage extends Component {
+export default class NewReleasePage extends Component {
     constructor(props){
         super(props);
         this.state = {
@@ -11,7 +11,7 @@ export default class PreorderPage extends Component {
     }
     
     async componentDidMount() {
-        await axios.post('/preorderTitles')
+        await axios.post('/newReleaseTitles')
             .then(response => { console.log(response) 
                 this.setState({
                     data: response.data

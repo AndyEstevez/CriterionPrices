@@ -59,12 +59,13 @@ const TitleSchema = new EntitySchema({
 })
 
 class NewTitle {
-    constructor(id, image, title, director, price, link) {
+    constructor(id, image, title, director, price, date, link) {
         this.id = id;
         this.image = image;
         this.title = title;
         this.director = director;
         this.price = price;
+        this.date = date;
         this.link = link;
     }
 }
@@ -90,11 +91,57 @@ const PreorderSchema = new EntitySchema({
         price: {
             type: 'text'
         },
+        date: {
+            type: 'text'
+        },
         link: {
             type: 'text'
         }
     }
 })
+
+class NewRelease {
+    constructor(id, image, title, director, price, date, link) {
+        this.id = id;
+        this.image = image;
+        this.title = title;
+        this.director = director;
+        this.price = price;
+        this.date = date;
+        this.link = link;
+    }
+}
+
+const NewReleaseSchema = new EntitySchema({
+    name: 'NewRelease',
+    target: NewRelease,
+    columns: {
+        id: {
+            primary: true,
+            type: 'int',
+            generated: true
+        },
+        image: {
+            type: 'text'
+        },
+        title: {
+            type: 'text'
+        },
+        director: {
+            type: 'text'
+        },
+        price: {
+            type: 'text'
+        },
+        date: {
+            type: 'text'
+        },
+        link: {
+            type: 'text'
+        }
+    }
+})
+
 
 
 async function getConnection() {
@@ -108,10 +155,36 @@ async function getConnection() {
         synchronize: true,
         logging: false,
         entities: [
-            TitleSchema, PreorderSchema
+            TitleSchema, PreorderSchema, NewReleaseSchema
         ]
     })
 }
+/* Functions for New Release table */
+// delete all entries and insert to table
+async function insertNewReleases(data, connection){
+    const releaseRepo = await connection.getRepository(NewRelease)
+    await releaseRepo.clear();
+
+    for(let d of data){
+        // create
+        const title = new NewRelease()
+        title.image = d.img
+        title.title = d.title
+        title.director = d.director
+        title.price = d.price
+        title.date = d.date
+        title.link = d.link
+
+        // save
+        await releaseRepo.save(title);        
+    }
+
+    // return all items in table
+    const allTitles = await releaseRepo.find();
+    connection.close();
+    return allTitles;
+}
+
 /* Functions for Preorder table */
 // delete all entries and insert to table
 async function insertPreorders(data, connection){
@@ -125,8 +198,9 @@ async function insertPreorders(data, connection){
         title.title = d.title
         title.director = d.director
         title.price = d.price
+        title.date = d.date
         title.link = d.link
-                
+
         // save
         await preorderRepo.save(title);        
     }
@@ -208,5 +282,5 @@ async function insertTitles(data, connection) {
 }
 
 module.exports = {
-    getAllTitles, insertTitles, updateTitles, insertPreorders, getConnection
+    getAllTitles, insertTitles, updateTitles, insertPreorders, insertNewReleases, getConnection
 }
