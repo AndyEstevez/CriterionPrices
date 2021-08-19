@@ -14,7 +14,6 @@ code {
 
 tr {
   border-top: 3px solid black;
-  
 }
 
 .content-table tbody tr:hover {
@@ -32,4 +31,8 @@ tr {
 
 progress{
   animation-duration: 0.5s;
+}
+
+.navbar-item:hover{
+  transform: scale(1.25);
 }

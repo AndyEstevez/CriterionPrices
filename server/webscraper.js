@@ -84,10 +84,29 @@ async function scrapePreorderOrNewReleases(url){
     }
 }
 
+async function scrapeFrontPage(url) {
+    try {
+        const browser = await puppeteer.launch({headless: true});
+        const page = await browser.newPage();
+        await page.goto(url);
+
+        const imageUrl = await page.evaluate(() => document
+                                    .querySelector('body > div.page-contain > main > div > article.home-article.home-article-type-default.in.is-in')
+                                    .getAttribute('data-mobile-background-image'))
+        await page.close();
+        browser.close();
+
+        return imageUrl;
+    } catch (err) {
+        console.log("Error: ", err);
+    }
+}
 
 // using temp url for testing
 // scrapePage('https://www.criterion.com/shop/browse/list?format=blu-ray&decade=2000s&country=United%20States')
 
 module.exports = {
-    scrapeAllTitles, scrapePreorderOrNewReleases
+    scrapeAllTitles, 
+    scrapePreorderOrNewReleases,
+    scrapeFrontPage
 }
