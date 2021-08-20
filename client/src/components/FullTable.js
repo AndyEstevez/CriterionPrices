@@ -1,15 +1,15 @@
 const FullTable = (props) => {
     return(
         <table class="table is-hoverable has-text-centered" className="content-table">
-            <thead style={{lineHeight: "100px", borderBottom: "3px solid black"}}>
-                <tr style={{fontFamily: "Mercury Display A", fontSize: "16px", whiteSpace: "nowrap"}} class="has-text-centered">
-                    <td>Spine #</td>
-                    <td></td>
-                    <td>Title</td>
-                    <td>Director</td>
-                    <td>Country</td>
-                    <td>Year</td>
-                    <td>Price</td>
+            <thead style={{lineHeight: "100px", borderBottom: "3px solid black", position: "sticky", }}>
+                <tr style={{fontFamily: "Mercury Display A", fontSize: "16px", whiteSpace: "nowrap", position: "sticky"}} class="has-text-centered">
+                    <th>Spine #</th>
+                    <th></th>
+                    <th>Title</th>
+                    <th>Director</th>
+                    <th>Country</th>
+                    <th>Year</th>
+                    <th>Price</th>
                 </tr>
             </thead>
 

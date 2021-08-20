@@ -30,7 +30,7 @@ export default class AllTitles extends Component {
         return (
             <div class="container">
                 { this.state.data.length === 0 
-                ? <progress class="progress is-large is-info" max="100">60%</progress>
+                ? <div style={{textAlign: "center", fontSize: "22px"}}><h1 style={{textAlign: "center"}}>Loading</h1> <progress class="progress is-large is-info" max="100"></progress>Loading</div>
                 : <FullTable data={this.state.data}/>}
             </div>
         )

@@ -27,12 +27,17 @@ tr {
 .content-table {
   border-collapse: separate;
   border-spacing: 0 1em;
+  margin: auto;
 }
 
 progress{
   animation-duration: 0.5s;
 }
 
-.navbar-item:hover{
-  transform: scale(1.25);
+.navbar-item{
+  text-decoration: none;
 }
+
+/* .navbar-item:hover{
+  transform: scale(1.25);
+} */

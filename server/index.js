@@ -6,8 +6,8 @@ const port = process.env.PORT || 5000;
 const scraper = require('./webscraper')
 const db = require('./db');
 
-// get Criterion.com front page image
-app.get('/getImage', async(req, res) => {
+// get Criterion.com front page info
+app.get('/getInfo', async(req, res) => {
     const url = 'https://www.criterion.com/'
     const scrapeData = await scraper.scrapeFrontPage(url);
     res.send(scrapeData)

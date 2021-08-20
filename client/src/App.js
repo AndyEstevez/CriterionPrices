@@ -5,6 +5,7 @@ import HomePage from './components/homepage'
 import AllTitles from './components/alltitles_page'
 import NewReleasePage from './components/newrelease_page';
 import PreorderPage from './components/preorder_page';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   return (

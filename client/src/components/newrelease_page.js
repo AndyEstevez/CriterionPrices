@@ -25,7 +25,7 @@ export default class NewReleasePage extends Component {
         return (
             <div>
                 {this.state.data.length === 0
-                ? <progress class="progress is-large is-info" max="100">60%</progress> 
+                ? <div style={{textAlign: "center", fontSize: "22px"}}><h1 style={{textAlign: "center"}}>Loading</h1> <progress class="progress is-large is-info" max="100"></progress>Loading</div>
                 : <Table data={this.state.data}/>}
             </div>
         )

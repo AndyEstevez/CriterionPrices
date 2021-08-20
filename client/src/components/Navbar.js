@@ -17,18 +17,26 @@ export default class Navbar extends Component {
 
     render() {
         console.log(this.state.url)
-        return(
-            <nav class="navbar is-transparent" style={{ backgroundColor: "rgba(0,0,0,0)", fontFamily: "Mercury Text G1 A, Mercury Text G1 B", fontSize: "22px"}}>
-                <div class="navbar-end" style={{margin: "auto"}}>
-                    <a class="navbar-item" style={{color: this.state.url === '/' ? 'white' : 'black'}}>
-                        The Collection
-                    </a>
-                    <a class="navbar-item" style={{color: this.state.url === '/' ? 'white' : 'black'}}>
-                        New Releases
-                    </a>
-                    <a class="navbar-item" style={{color: this.state.url === '/' ? 'white' : 'black'}}>
-                        Coming Soon
-                    </a>
+        return( 
+            <nav class="navbar navbar-dark bg-dark fixed-top navbar-expand">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav mx-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href='/'>Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href='/all'>The Collection</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href='/new-releases'>New Releases</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href='/coming-soon'>Coming Soon</a>
+                        </li>
+                    </ul>
                 </div>
             </nav>
         )

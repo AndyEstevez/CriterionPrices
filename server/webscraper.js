@@ -93,10 +93,32 @@ async function scrapeFrontPage(url) {
         const imageUrl = await page.evaluate(() => document
                                     .querySelector('body > div.page-contain > main > div > article.home-article.home-article-type-default.in.is-in')
                                     .getAttribute('data-mobile-background-image'))
+        
+        const buttonText = await page.$eval('.button__secondary', el => el.textContent) 
+        const hrefs = await Promise.all((await page.$x('/html/body/div[2]/main/div/article[1]/a')).map(async item => await (await item.getProperty('href')).jsonValue()))
+
+        // case 1: grab element by <div> class name = 'header', then grab <p> and <h1> innerText
+        const pLabel = await page.$eval('.label', el => el.innerText)
+        const header = await page.evaluate(() => {
+            let h1 = document.querySelector('h1').innerText
+            return h1
+        })
+        // case 2: grab element by <div> class name = 'image', then grab <img> src
+        const image = await page.$eval('.image', el => el.querySelector('img').src)
+
+        // use if statement to check length of h1 in article 1 to see if it exists
+        // if it does exist then use case 1
+        // else use case 2
+        const h1 = await page.$x('/html/body/div[2]/main/div/article[1]/a/div/div[1]/h1')
         await page.close();
         browser.close();
-
-        return imageUrl;
+        if(h1.length > 0) {
+            return { pLabel, header, imageUrl, buttonText, hrefs }
+        }
+        else {
+            return { image, imageUrl, buttonText, hrefs }
+        }
+        
     } catch (err) {
         console.log("Error: ", err);
     }
