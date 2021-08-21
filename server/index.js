@@ -1,6 +1,7 @@
 const express = require('express')
+const cors  = require('cors')
 const app = express()
-
+app.use(cors());
 const port = process.env.PORT || 5000;
 
 const scraper = require('./webscraper')
@@ -73,5 +74,9 @@ app.post('/allTitles', async(req, res) => {
     }
 
 })
+
+if(process.env.NODE_ENV === 'production') {
+    app.use(express.static('../build'))
+}
 
 app.listen(port, () => console.log(`Listening on port ${port}`))

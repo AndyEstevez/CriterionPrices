@@ -1,5 +1,4 @@
 const typeorm = require('typeorm')
-const mysql = require('mysql')
 // database name: allTitles
 
 const EntitySchema = require('typeorm').EntitySchema;
@@ -147,11 +146,11 @@ const NewReleaseSchema = new EntitySchema({
 async function getConnection() {
     return await typeorm.createConnection({
         type: "mysql",
-        host: "localhost",
-        port: 3306, 
-        username: "root",
-        password: "password123",
-        database: "alltitles",
+        host: process.env.DB_HOST,
+        port: process.env.DB_PORT, 
+        username: process.env.DB_USER,
+        password: process.env.DB_PASSWORD,
+        database: process.env.DB_DATABASE,
         synchronize: true,
         logging: false,
         entities: [
