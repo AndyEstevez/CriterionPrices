@@ -1,11 +1,13 @@
 const express = require('express')
 const cors  = require('cors')
-const app = express()
-app.use(cors());
-const port = process.env.PORT || 5000;
-
 const scraper = require('./webscraper')
 const db = require('./db');
+require('dotenv').config();
+
+const app = express()
+app.use(cors());
+
+const port = process.env.PORT || 5000;
 
 // get Criterion.com front page info
 app.get('/getInfo', async(req, res) => {
@@ -13,7 +15,6 @@ app.get('/getInfo', async(req, res) => {
     const scrapeData = await scraper.scrapeFrontPage(url);
     res.send(scrapeData)
 })
-
 
 // get Criterion new release titles from database
 app.post('/newReleaseTitles', async (req, res) => {

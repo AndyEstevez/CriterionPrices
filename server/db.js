@@ -1,5 +1,4 @@
 const typeorm = require('typeorm')
-// database name: allTitles
 
 const EntitySchema = require('typeorm').EntitySchema;
 
@@ -140,8 +139,6 @@ const NewReleaseSchema = new EntitySchema({
         }
     }
 })
-
-
 
 async function getConnection() {
     return await typeorm.createConnection({
