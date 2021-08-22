@@ -7,8 +7,6 @@ require('dotenv').config();
 const app = express()
 app.use(cors());
 
-const port = process.env.PORT || 5000;
-
 // get Criterion.com front page info
 app.get('/api/getInfo', async(req, res) => {
     const url = 'https://www.criterion.com/'
@@ -76,4 +74,5 @@ app.post('/api/allTitles', async(req, res) => {
 
 })
 
+const port = process.env.PORT || 3001;
 app.listen(port, () => console.log(`Listening on port ${port}`))
