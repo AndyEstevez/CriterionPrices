@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import axios from 'axios'
+import api from '../api';
 import Table from './Table'
 
 export default class NewReleasePage extends Component {
@@ -11,7 +12,7 @@ export default class NewReleasePage extends Component {
     }
     
     async componentDidMount() {
-        await axios.post('/newReleaseTitles')
+        await api.post('/newReleaseTitles')
             .then(response => { console.log(response) 
                 this.setState({
                     data: response.data

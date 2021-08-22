@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import api from '../api';
 
 export default class HomePage extends Component {
     constructor(props){
@@ -10,7 +11,7 @@ export default class HomePage extends Component {
     }
 
     async componentDidMount() {
-        await axios.get('/getInfo')
+        await api.get('/getInfo')
             .then(response => { 
                 this.setState({
                     data: response.data

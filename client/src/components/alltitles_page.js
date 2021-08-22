@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import api from '../api';
 import FullTable from './FullTable';
 
 export default class AllTitles extends Component {
@@ -11,13 +12,13 @@ export default class AllTitles extends Component {
     }
 
     async componentDidMount() {
-        await axios.get('/allTitles')
+        await api.get('/allTitles')
             .then(response => { 
                 this.setState({
                     data: response.data
                 })
             })
-        await axios.post('/updateTitles')
+        await api.post('/updateTitles')
             .then(response => { console.log(response)
                 this.setState({
                     data: response.data

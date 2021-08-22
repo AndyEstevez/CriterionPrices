@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { Component } from 'react'
+import api from '../api';
 import Table from './Table'
 
 export default class PreorderPage extends Component {
@@ -11,7 +12,7 @@ export default class PreorderPage extends Component {
     }
     
     async componentDidMount() {
-        await axios.post('/preorderTitles')
+        await api.post('/preorderTitles')
             .then(response => { console.log(response) 
                 this.setState({
                     data: response.data

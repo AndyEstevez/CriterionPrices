@@ -10,14 +10,14 @@ app.use(cors());
 const port = process.env.PORT || 5000;
 
 // get Criterion.com front page info
-app.get('/getInfo', async(req, res) => {
+app.get('/api/getInfo', async(req, res) => {
     const url = 'https://www.criterion.com/'
     const scrapeData = await scraper.scrapeFrontPage(url);
     res.send(scrapeData)
 })
 
 // get Criterion new release titles from database
-app.post('/newReleaseTitles', async (req, res) => {
+app.post('/api/newReleaseTitles', async (req, res) => {
     const connection = await db.getConnection();
     const url = 'https://www.criterion.com/shop/browse?popular=new-releases&direction=asc';
     const scrapeData = await scraper.scrapePreorderOrNewReleases(url);
@@ -26,7 +26,7 @@ app.post('/newReleaseTitles', async (req, res) => {
 })
 
 // get Criterion preorder titles from database
-app.post('/preorderTitles', async(req, res) => {
+app.post('/api/preorderTitles', async(req, res) => {
     const connection = await db.getConnection();
     const url = 'https://www.criterion.com/shop/browse?popular=coming-soon&direction=asc';
     const scrapeData = await scraper.scrapePreorderOrNewReleases(url);
@@ -35,14 +35,14 @@ app.post('/preorderTitles', async(req, res) => {
 })
 
 // get all the Criterion titles from database
-app.get('/allTitles', async(req, res) => {
+app.get('/api/allTitles', async(req, res) => {
     const connection = await db.getConnection();
     const scrapeData = await db.getAllTitles(connection);
     res.send(scrapeData);
 })
 
 // update database for new entries to Criterion or missing titles not entried
-app.post('/updateTitles', async(req, res) => {
+app.post('/api/updateTitles', async(req, res) => {
     const connection = await db.getConnection();
     const url = 'https://www.criterion.com/shop/browse/list?popular=coming-soon&direction=asc'
     const scrapeData = await scraper.scrapeAllTitles(url);
@@ -51,7 +51,7 @@ app.post('/updateTitles', async(req, res) => {
 })
 
 // add titles to database
-app.post('/allTitles', async(req, res) => {
+app.post('/api/allTitles', async(req, res) => {
 
     try {
         const connection = await db.getConnection();
@@ -75,9 +75,5 @@ app.post('/allTitles', async(req, res) => {
     }
 
 })
-
-if(process.env.NODE_ENV === 'production') {
-    app.use(express.static('../build'))
-}
 
 app.listen(port, () => console.log(`Listening on port ${port}`))
