@@ -89,10 +89,6 @@ async function scrapeFrontPage(url) {
         const browser = await puppeteer.launch({headless: true});
         const page = await browser.newPage();
         await page.goto(url);
-
-        const imageUrl = await page.evaluate(() => document
-                                    .querySelector('body > div.page-contain > main > div > article.home-article.home-article-type-default.in.is-in')
-                                    .getAttribute('data-mobile-background-image'))
         
         const buttonText = await page.$eval('.button__secondary', el => el.textContent) 
         const hrefs = await Promise.all((await page.$x('/html/body/div[2]/main/div/article[1]/a')).map(async item => await (await item.getProperty('href')).jsonValue()))
@@ -110,13 +106,19 @@ async function scrapeFrontPage(url) {
         // if it does exist then use case 1
         // else use case 2
         const h1 = await page.$x('/html/body/div[2]/main/div/article[1]/a/div/div[1]/h1')
+        const [backgroundImage] = await page.$x('/html/body/div[2]/main/div/article[1]')
+        const banner = await page.evaluate(url => url.getAttribute('data-mobile-background-image'), backgroundImage)
+
         await page.close();
         browser.close();
         if(h1.length > 0) {
+            const imageUrl = await page.evaluate(() => document
+                                    .querySelector('body > div.page-contain > main > div > article.home-article.home-article-type-default.in.is-in')
+                                    .getAttribute('data-mobile-background-image'))
             return { pLabel, header, imageUrl, buttonText, hrefs }
         }
         else {
-            return { image, imageUrl, buttonText, hrefs }
+            return { image, banner, buttonText, hrefs }
         }
         
     } catch (err) {

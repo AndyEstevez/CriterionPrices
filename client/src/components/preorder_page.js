@@ -1,4 +1,3 @@
-import axios from 'axios';
 import React, { Component } from 'react'
 import api from '../api';
 import Table from './Table'
