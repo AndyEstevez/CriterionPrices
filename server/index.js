@@ -15,20 +15,34 @@ app.get('/api/getInfo', async(req, res) => {
 })
 
 // get Criterion new release titles from database
-app.post('/api/newReleaseTitles', async (req, res) => {
+app.get('/api/getNewReleases', async(req, res) => {
     const connection = await db.getConnection();
-    const url = 'https://www.criterion.com/shop/browse?popular=new-releases&direction=asc';
-    const scrapeData = await scraper.scrapePreorderOrNewReleases(url);
-    const newReleases = await db.insertNewReleases(scrapeData, connection);
+    const newReleases = await db.getNewReleases(connection);
     res.send(newReleases)
 })
 
-// get Criterion preorder titles from database
-app.post('/api/preorderTitles', async(req, res) => {
+// update Criterion new release titles from database
+app.post('/api/updateNewReleases', async (req, res) => {
+    const connection = await db.getConnection();
+    const url = 'https://www.criterion.com/shop/browse?popular=new-releases&direction=asc';
+    const scrapeData = await scraper.scrapePreorderOrNewReleases(url);
+    const newReleases = await db.updateNewReleases(scrapeData, connection);
+    res.send(newReleases)
+})
+
+// get Criterion pre order titles from database
+app.get('/api/getPreorders', async(req, res) => {
+    const connection = await db.getConnection();
+    const preorders = await db.getPreorders(connection);
+    res.send(preorders)
+})
+
+// update Criterion preorder titles from database
+app.post('/api/updatePreorders', async(req, res) => {
     const connection = await db.getConnection();
     const url = 'https://www.criterion.com/shop/browse?popular=coming-soon&direction=asc';
     const scrapeData = await scraper.scrapePreorderOrNewReleases(url);
-    const preorderTitles = await db.insertPreorders(scrapeData, connection);
+    const preorderTitles = await db.updatePreorders(scrapeData, connection);
     res.send(preorderTitles)
 })
 

@@ -40,7 +40,7 @@ export default class HomePage extends Component {
                                 <p>{this.state.data.pLabel}</p>
                                 <h1 style={{textAlign: "center"}}>{this.state.data.header}</h1>
                                 </div>
-                            : <div><img src={this.state.data.image}/></div>}
+                            : <div><img src={this.state.data.image} alt="banner"/></div>}
                         </div>
                         <div>
                             <button type="button" class="btn btn-light btn-lg btn-block" 

@@ -156,8 +156,8 @@ async function getConnection() {
     })
 }
 /* Functions for New Release table */
-// delete all entries and insert to table
-async function insertNewReleases(data, connection){
+// update entries and insert to table
+async function updateNewReleases(data, connection){
     const releaseRepo = await connection.getRepository(NewRelease)
     await releaseRepo.clear();
 
@@ -181,9 +181,19 @@ async function insertNewReleases(data, connection){
     return allTitles;
 }
 
+// initialize entries to table
+async function getNewReleases(connection){
+    const releaseRepo = await connection.getRepository(NewRelease)
+
+    // return all items in table
+    const allTitles = await releaseRepo.find();
+    connection.close();
+    return allTitles;
+}
+
 /* Functions for Preorder table */
 // delete all entries and insert to table
-async function insertPreorders(data, connection){
+async function updatePreorders(data, connection){
     const preorderRepo = await connection.getRepository(NewTitle)
     await preorderRepo.clear();
 
@@ -206,7 +216,14 @@ async function insertPreorders(data, connection){
     connection.close();
     return allTitles;
 }
+async function getPreorders(connection){
+    const preorderRepo = await connection.getRepository(NewTitle)
 
+    // return all items in table
+    const allTitles = await preorderRepo.find();
+    connection.close();
+    return allTitles;
+}
 /* Functions for Title table */
 // return all titles 
 async function getAllTitles(connection) {
@@ -278,5 +295,5 @@ async function insertTitles(data, connection) {
 }
 
 module.exports = {
-    getAllTitles, insertTitles, updateTitles, insertPreorders, insertNewReleases, getConnection
+    getAllTitles, insertTitles, updateTitles, updateNewReleases, updatePreorders, getNewReleases, getPreorders, getConnection
 }

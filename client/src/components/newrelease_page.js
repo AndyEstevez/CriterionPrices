@@ -7,11 +7,12 @@ export default class NewReleasePage extends Component {
         super(props);
         this.state = {
             data: [],
+            isLoading: false
         }
     }
     
     async componentDidMount() {
-        await api.post('/newReleaseTitles')
+        await api.get('/getNewReleases')
             .then(response => { console.log(response) 
                 this.setState({
                     data: response.data
@@ -19,14 +20,36 @@ export default class NewReleasePage extends Component {
             })
     }
 
-    render() {
-        console.log(this.state.data)
+    async updateTable() {
+        this.setState({
+            isLoading: true
+        })
+        this.updateData();
+    }
 
+    async updateData() {
+        await api.post('/updateNewReleases')
+            .then(response => { console.log(response) 
+                this.setState({
+                    data: response.data, 
+                    isLoading: false
+                })
+            })
+    }
+
+    render() {
         return (
             <div>
-                {this.state.data.length === 0
-                ? <div style={{textAlign: "center", fontSize: "22px"}}><h1 style={{textAlign: "center"}}>Loading</h1> <progress class="progress is-large is-info" max="100"></progress>Loading</div>
-                : <Table data={this.state.data}/>}
+                <button type="button" class="btn btn-success btn-lg" 
+                style={{display: "block", margin: "auto", marginTop: "100px"}}
+                onClick={this.updateTable.bind(this)}>
+                Check For Update
+                { this.state.isLoading 
+                ? <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                : <></>
+                }
+                </button>
+                <Table style={{display: "inline-block"}} data={this.state.data}/>
             </div>
         )
     }
