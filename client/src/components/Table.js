@@ -1,33 +1,33 @@
 const Table = (props) => {
     console.log(props)
     return(
-        <table class="table is-hoverable has-text-centered" className="content-table" style={{ paddingTop: "50px"}}>
-            <thead style={{lineHeight: "100px", borderBottom: "3px solid black"}}>
-                <tr style={{fontFamily: "Mercury Display A", fontSize: "16px", whiteSpace: "nowrap"}} class="has-text-centered">
-                    <td></td>
-                    <td>Title</td>
-                    <td>Director</td>
-                    <td>Price</td>
-                    <td>Date</td>
-                </tr>
-            </thead>
+        <div class="container" style={{display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))", gridGap: "0.5em", paddingTop: "50px"}}> 
+            {props.data.map(index => {
+                return (
+                    <div class="card" key={index.link} style={{textAlign: "center"}}>
+                        <div class="card-image">
+                            <figure class="image">
+                                <img src={index.image} alt={index.title}/>
+                            </figure>
+                        </div>
+                        <div class="card-content">
+                            
+                            <p class="subtitle" style={{color: "#B4841E"}}>{index.date}</p>
+                            <p class="title" style={{fontSize: "1.5em"}}>{index.title}</p>
+                            <div class="content" style={{fontSize: "0.80em"}}>{index.director}</div>
+                            <p class="subtitle" style={{margin: "auto", color: "#00CC00"}}>{index.price}</p>
+                        </div>
 
-            <tbody>
-                {props.data.map(index => {
-                    return(
-                        <tr key={index.link} style={{fontFamily: "Gotham B"}} class="has-text-centered" onClick={() => window.open(index.link, "_blank")}>
-                            <td>
-                                <img style={{width: "40%", height: "auto"}} src={index.image} alt={index.title}/>
-                            </td>
-                            <td style={{fontWeight: "700",}}>{index.title}</td>
-                            <td style={{textWrap: "normal", wordWrap: "break-word"}}>{index.director}</td>
-                            <td style={{color: '#00CC00'}}>{index.price}</td>
-                            <td>{index.date}</td>
-                        </tr>
-                    )
-                })}
-            </tbody>
-        </table>
+                        <div style={{margin: "auto"}}></div>
+                        <button type="button" 
+                                class="btn btn-outline-success btn-lg btn-block" 
+                                onClick={() => window.open(index.link, "_blank")}>
+                                Buy
+                        </button>
+                    </div>
+                )
+            })}
+        </div>
     )
 }
 
