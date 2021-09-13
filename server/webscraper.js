@@ -109,7 +109,7 @@ async function scrapeFrontPage(url) {
         const h1 = await page.$x('/html/body/div[2]/main/div/article[1]/a/div/div[1]/h1')
         const [backgroundImage] = await page.$x('/html/body/div[2]/main/div/article[1]')
         const banner = await page.evaluate(url => url.getAttribute('data-mobile-background-image'), backgroundImage)
-
+        const fullImage = await page.evaluate(url => url.getAttribute('data-background-image'), backgroundImage)
         // use if statement to check length of h1 in article 1 to see if it exists
         // if it does exist then use case 1
         // check if post summary exists in article 1 for case 2
@@ -130,7 +130,7 @@ async function scrapeFrontPage(url) {
             const post_summary = await page.evaluate(() => document.querySelector('.post-summary').innerText)
             await page.close();
             browser.close();
-            return { banner, buttonText, lines, post_summary, hrefs}
+            return { fullImage, buttonText, lines, post_summary, hrefs}
         }
         else {
             await page.close();
