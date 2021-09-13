@@ -99,25 +99,42 @@ async function scrapeFrontPage(url) {
             let h1 = document.querySelector('h1').innerText
             return h1
         })
-        // case 2: grab element by <div> class name = 'image', then grab <img> src
-        const image = await page.$eval('.image', el => el.querySelector('img').src)
 
-        // use if statement to check length of h1 in article 1 to see if it exists
-        // if it does exist then use case 1
-        // else use case 2
+        // case 2: grab element by <div> class name = 'post-summary
+        const post_summary = await page.$x('/html/body/div[2]/main/div/article[1]/a/div/div[1]')
+
+        // case 3: grab element by <div> class name = 'image', then grab <img> src
+        const image = await page.$eval('.image', el => el.querySelector('img').src)
+        
         const h1 = await page.$x('/html/body/div[2]/main/div/article[1]/a/div/div[1]/h1')
         const [backgroundImage] = await page.$x('/html/body/div[2]/main/div/article[1]')
         const banner = await page.evaluate(url => url.getAttribute('data-mobile-background-image'), backgroundImage)
 
-        await page.close();
-        browser.close();
+        // use if statement to check length of h1 in article 1 to see if it exists
+        // if it does exist then use case 1
+        // check if post summary exists in article 1 for case 2
+        // if it exist then use case 2
+        // else use case 3
         if(h1.length > 0) {
             const imageUrl = await page.evaluate(() => document
                                     .querySelector('body > div.page-contain > main > div > article.home-article.home-article-type-default.in.is-in')
                                     .getAttribute('data-mobile-background-image'))
+            await page.close();
+            browser.close();
             return { pLabel, header, imageUrl, buttonText, hrefs }
         }
+        else if(post_summary.length > 0) {
+            const buttonText = await page.$eval('.button__secondary_for-posts', el => el.textContent)
+            const line = await page.evaluate(() => document.querySelector('.line').innerText)
+            const lines = line.split(":")
+            const post_summary = await page.evaluate(() => document.querySelector('.post-summary').innerText)
+            await page.close();
+            browser.close();
+            return { banner, buttonText, lines, post_summary, hrefs}
+        }
         else {
+            await page.close();
+            browser.close();
             return { image, banner, buttonText, hrefs }
         }
         
