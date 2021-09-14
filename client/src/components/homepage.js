@@ -36,7 +36,7 @@ export default class HomePage extends Component {
                         ? `url(${this.state.data.fullImage})` 
                         : `url(${this.state.data.banner})`, 
                 position: "relative", width: "100%", height: "100vh", display: "flex",
-                backgroundSize: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat", margin: "auto"}}>
+                backgroundSize: "cover", backgroundRepeat: "no-repeat", margin: "auto"}}>
                     <a href={this.state.data.hrefs[0]} target="_blank"  rel="noreferrer" style={{textDecoration: "none", margin: "auto", color: "white"}}>
                         <div>
                             {this.state.data.header
