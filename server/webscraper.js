@@ -135,7 +135,7 @@ async function scrapeFrontPage(url) {
         else {
             await page.close();
             browser.close();
-            return { image, banner, buttonText, hrefs }
+            return { image, fullImage, banner, buttonText, hrefs }
         }
         
     } catch (err) {
