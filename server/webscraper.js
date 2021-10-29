@@ -94,11 +94,7 @@ async function scrapeFrontPage(url) {
         const hrefs = await Promise.all((await page.$x('/html/body/div[2]/main/div/article[1]/a')).map(async item => await (await item.getProperty('href')).jsonValue()))
         console.log("TESTING");
         // case 1: grab element by <div> class name = 'header', then grab <p> and <h1> innerText
-        const pLabel = await page.$eval('.label', el => el.innerText)
-        const header = await page.evaluate(() => {
-            let h1 = document.querySelector('h1').innerText
-            return h1
-        })
+        
 
         // case 2: grab element by <div> class name = 'post-summary
         const post_summary = await page.$x('/html/body/div[2]/main/div/article[1]/a/div/div[1]')
@@ -116,6 +112,11 @@ async function scrapeFrontPage(url) {
         // if it exist then use case 2
         // else use case 3
         if(h1.length > 0) {
+            const pLabel = await page.$eval('.label', el => el.innerText)
+            const header = await page.evaluate(() => {
+                let h1 = document.querySelector('h1').innerText
+                return h1
+            })
             const imageUrl = await page.evaluate(() => document
                                     .querySelector('body > div.page-contain > main > div > article.home-article.home-article-type-default.in.is-in')
                                     .getAttribute('data-mobile-background-image'))
