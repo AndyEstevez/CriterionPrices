@@ -92,7 +92,7 @@ async function scrapeFrontPage(url) {
         
         const buttonText = await page.$eval('.button__secondary', el => el.textContent) 
         const hrefs = await Promise.all((await page.$x('/html/body/div[2]/main/div/article[1]/a')).map(async item => await (await item.getProperty('href')).jsonValue()))
-
+        console.log("TESTING");
         // case 1: grab element by <div> class name = 'header', then grab <p> and <h1> innerText
         const pLabel = await page.$eval('.label', el => el.innerText)
         const header = await page.evaluate(() => {
@@ -124,6 +124,7 @@ async function scrapeFrontPage(url) {
             return { pLabel, header, imageUrl, buttonText, hrefs }
         }
         else if(post_summary.length > 0) {
+            console.log("IN EDGE CASE")
             const buttonText = await page.$eval('.button__secondary_for-posts', el => el.textContent)
             const line = await page.evaluate(() => document.querySelector('.line').innerText)
             const lines = line.split(":")
