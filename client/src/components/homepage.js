@@ -55,14 +55,7 @@ export default class HomePage extends Component {
         console.log(localStorage.getItem('hrefs'))
         return (
             <div>
-                {this.state.hrefs !== localStorage.getItem('hrefs') 
-                ? <div style={{textAlign: "center", fontSize: "22px", alignItems: "center", justifyContent: "center"}} class="container">
-                    <h1 style={{textAlign: "center"}}>Loading</h1> 
-                    <progress class="progress is-large is-info" max="100"></progress>
-                    Loading
-                 </div>
                 
-                : 
                 <article style={{backgroundImage: this.state.imageUrl.length > 0
                     ? `url(${this.state.imageUrl})` 
                     : this.state.fullImage.length > 0
@@ -100,7 +93,7 @@ export default class HomePage extends Component {
                         </div>
                     </a>
                 </article>    
-                }
+                
             </div>
         )
     }
