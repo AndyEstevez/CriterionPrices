@@ -1,7 +1,16 @@
 const Table = (props) => {
     console.log(props)
     return(
-        <div class="container" style={{display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))", gridGap: "0.5em", paddingTop: "50px"}}> 
+        <div>
+        {props.dataNotLoaded 
+            ? <div class="d-flex justify-content-center">
+                <div class="spinner-border" role="status" style={{width: "3rem", height: "3rem"}}>
+                    <span class="sr-only" aria-hidden="true"></span>
+                </div>
+             </div> 
+            : 
+            <div class="container" style={{display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))", gridGap: "0.5em", paddingTop: "50px"}}> 
+
             {props.data.map(index => {
                 return (
                     <div class="card" key={index.link} style={{textAlign: "center"}}>
@@ -27,6 +36,8 @@ const Table = (props) => {
                     </div>
                 )
             })}
+            </div>
+        }
         </div>
     )
 }

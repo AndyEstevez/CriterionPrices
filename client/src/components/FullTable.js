@@ -1,6 +1,15 @@
 const FullTable = (props) => {
     return(
-        <table class="table is-hoverable has-text-centered" className="content-table">
+        <div>
+        { props.dataNotLoaded 
+            ? <div class="d-flex justify-content-center">
+                <div class="spinner-border" role="status" style={{width: "3rem", height: "3rem"}}>
+                    <span class="sr-only" aria-hidden="true"></span>
+                </div>
+            </div>
+            : 
+        <table class="table is-hoverable has-text-centered" className="content-table" style={{backgroundColor: "#F6F6F6"}}>
+            
             <thead style={{lineHeight: "100px", borderBottom: "3px solid black", position: "sticky", }}>
                 <tr style={{fontFamily: "Mercury Display A", fontSize: "16px", whiteSpace: "nowrap", position: "sticky"}} class="has-text-centered">
                     <th>Spine #</th>
@@ -31,6 +40,8 @@ const FullTable = (props) => {
                 })}
             </tbody>
         </table>
+            }
+        </div>
     )
 }
 

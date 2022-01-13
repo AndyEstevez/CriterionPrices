@@ -7,7 +7,7 @@ export default class AllTitles extends Component {
         super(props)
         this.state = {
             data: [],
-            isLoading: false
+            dataNotLoaded: true
         }
     }
 
@@ -15,14 +15,15 @@ export default class AllTitles extends Component {
         await api.get('/allTitles')
             .then(response => { 
                 this.setState({
-                    data: response.data
+                    data: response.data,
+                    dataNotLoaded: false
                 })
             })
     }
 
     async updateTable() {
         this.setState({
-            isLoading: true
+            dataNotLoaded: true
         })
         this.updateData();
     }
@@ -32,7 +33,7 @@ export default class AllTitles extends Component {
             .then(response => { console.log(response) 
                 this.setState({
                     data: response.data, 
-                    isLoading: false
+                    dataNotLoaded: false
                 })
             })
     }
@@ -45,13 +46,9 @@ export default class AllTitles extends Component {
                 style={{display: "block", margin: "auto", marginTop: "100px"}}
                 onClick={this.updateTable.bind(this)}>
                 Check For Update
-                { this.state.isLoading 
-                ? <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                : <></>
-                }
                 </button>
 
-                <FullTable style={{display: "inline-block"}} data={this.state.data}/>
+                <FullTable style={{display: "inline-block"}} data={this.state.data} dataNotLoaded={this.state.dataNotLoaded}/>
             </div>
         )
     }
