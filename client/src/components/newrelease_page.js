@@ -1,53 +1,38 @@
-import React, { Component } from 'react'
+import React, { useState, useEffect } from 'react'
 import api from '../api';
 import Table from './Table'
 
-export default class NewReleasePage extends Component {
-    constructor(props){
-        super(props);
-        this.state = {
-            data: [],
-            dataNotLoaded: true
-        }
+const NewReleasesPage = () => {
+    const [data, setData] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        api.get('/getNewReleases')
+            .then(response => { 
+                setData(response.data)
+                setIsLoading(false)
+            })
+    })
+    
+    function updateTable() {
+        setIsLoading(true)
+        api.post('/updateNewReleases')
+            .then(response => { 
+                setData(response.data)
+                setIsLoading(false)
+            })
     }
     
-    async componentDidMount() {
-        await api.get('/getNewReleases')
-            .then(response => { console.log(response) 
-                this.setState({
-                    data: response.data,
-                    dataNotLoaded: false
-                })
-            })
-    }
-
-    async updateTable() {
-        this.setState({
-            dataNotLoaded: true
-        })
-        this.updateData();
-    }
-
-    async updateData() {
-        await api.post('/updateNewReleases')
-            .then(response => { console.log(response) 
-                this.setState({
-                    data: response.data, 
-                    dataNotLoaded: false
-                })
-            })
-    }
-
-    render() {
-        return (
-            <div>
-                <button type="button" class="btn btn-success btn-lg" 
+    return (
+        <div>
+            <button type="button" class="btn btn-success btn-lg" 
                 style={{display: "block", margin: "auto", marginTop: "100px"}}
-                onClick={this.updateTable.bind(this)}>
+                onClick={updateTable}>
                 Check For Update
-                </button>
-                <Table style={{display: "inline-block"}} data={this.state.data} dataNotLoaded={this.state.dataNotLoaded}/>
-            </div>
-        )
-    }
+            </button>
+            <Table style={{display: "inline-block"}} data={data} dataNotLoaded={isLoading}/>
+        </div>
+    );
 }
+
+export default NewReleasesPage;

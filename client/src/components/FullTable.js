@@ -1,3 +1,5 @@
+import React from 'react';
+
 const FullTable = (props) => {
     return(
         <div>

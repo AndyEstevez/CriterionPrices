@@ -1,55 +1,38 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react'
 import api from '../api';
-import FullTable from './FullTable';
+import FullTable from './FullTable'
 
-export default class AllTitles extends Component {
-    constructor(props){
-        super(props)
-        this.state = {
-            data: [],
-            dataNotLoaded: true
-        }
-    }
+const AllTitles = () => {
+    const [data, setData] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
 
-    async componentDidMount() {
-        await api.get('/allTitles')
+    useEffect(() => {
+        api.get('/allTitles')
             .then(response => { 
-                this.setState({
-                    data: response.data,
-                    dataNotLoaded: false
-                })
+                setData(response.data)
+                setIsLoading(false)
+            })
+    })
+    
+    function updateTable() {
+        setIsLoading(true)
+        api.post('/updateTitles')
+            .then(response => {  
+                setData(response.data)
+                setIsLoading(false)
             })
     }
-
-    async updateTable() {
-        this.setState({
-            dataNotLoaded: true
-        })
-        this.updateData();
-    }
-
-    async updateData() {
-        await api.post('/updateTitles')
-            .then(response => { console.log(response) 
-                this.setState({
-                    data: response.data, 
-                    dataNotLoaded: false
-                })
-            })
-    }
-
-    render() {
-        console.log(this.state.data)
-        return (
-            <div class="container">
-                <button type="button" class="btn btn-success btn-lg" 
+    
+    return (
+        <div class="container">
+            <button type="button" class="btn btn-success btn-lg" 
                 style={{display: "block", margin: "auto", marginTop: "100px"}}
-                onClick={this.updateTable.bind(this)}>
+                onClick={updateTable}>
                 Check For Update
-                </button>
-
-                <FullTable style={{display: "inline-block"}} data={this.state.data} dataNotLoaded={this.state.dataNotLoaded}/>
-            </div>
-        )
-    }
+            </button>
+            <FullTable style={{display: "inline-block"}} data={data} dataNotLoaded={isLoading}/>
+        </div>
+    );
 }
+
+export default AllTitles;
